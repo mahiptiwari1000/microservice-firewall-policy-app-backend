@@ -16,4 +16,29 @@ router.post("/", async (req, res) => {
     res.json({ message: "Network data saved!" });
 });
 
+router.delete("/node/:id", async (req, res) => {
+    try {
+        const nodeId = req.params.id;
+        
+        await Node.findOneAndDelete({ id: nodeId });
+
+        await Link.deleteMany({ $or: [{ source: nodeId }, { target: nodeId }] });
+
+        res.json({ message: `Node ${nodeId} and its associated links deleted successfully!` });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to delete node" });
+    }
+});
+
+router.delete("/link/:id", async (req, res) => {
+    try {
+        const linkId = req.params.id;
+        await Link.findByIdAndDelete(linkId);
+        res.json({ message: "Link deleted successfully!" });
+    } catch (error) {
+        res.status(500).json({ error: "Failed to delete link" });
+    }
+});
+
+
 module.exports = router;
