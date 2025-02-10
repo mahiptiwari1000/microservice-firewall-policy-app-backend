@@ -11,8 +11,8 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
     const { nodes, links } = req.body;
-    await Node.insertMany(nodes);
-    await Link.insertMany(links);
+    await Node.insertMany(nodes,  { ordered: false });
+    await Link.insertMany(links,  { ordered: false });
     res.json({ message: "Network data saved!" });
 });
 
