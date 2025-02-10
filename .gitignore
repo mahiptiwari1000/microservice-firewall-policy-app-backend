@@ -30,3 +30,4 @@ coverage/
 # Jest & Testing
 jest.config.js
 coverage/
+.vercel
