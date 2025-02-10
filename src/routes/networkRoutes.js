@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
 router.delete("/node/:id", async (req, res) => {
     try {
         const nodeId = req.params.id;
-        
+
         await Node.findOneAndDelete({ id: nodeId });
 
         await Link.deleteMany({ $or: [{ source: nodeId }, { target: nodeId }] });
@@ -30,15 +30,18 @@ router.delete("/node/:id", async (req, res) => {
     }
 });
 
-router.delete("/link/:id", async (req, res) => {
+router.delete("/link/:source/:target", async (req, res) => {
     try {
-        const linkId = req.params.id;
-        await Link.findByIdAndDelete(linkId);
-        res.json({ message: "Link deleted successfully!" });
+        const { source, target } = req.params;
+
+        await Link.deleteOne({ source, target });
+
+        res.json({ message: `Link from ${source} to ${target} deleted successfully!` });
     } catch (error) {
         res.status(500).json({ error: "Failed to delete link" });
     }
 });
+
 
 
 module.exports = router;
