@@ -13,4 +13,20 @@ router.post("/", async (req, res) => {
     res.json({ message: "Policy added!" });
 });
 
+router.delete("/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedPolicy = await Policy.findByIdAndDelete(id);
+
+        if (!deletedPolicy) {
+            return res.status(404).json({ message: "Policy not found" });
+        }
+
+        res.json({ message: "Policy deleted successfully!" });
+    } catch (error) {
+        console.error("Error deleting policy:", error);
+        res.status(500).json({ message: "Server error while deleting policy" });
+    }
+});
+
 module.exports = router;
